@@ -1,7 +1,6 @@
 import {createStore,combineReducers,applyMiddleware} from 'redux'
 import thunk from 'redux-thunk'
 
-import userAuthReducer from "../reducers/userAuthReducer"
 import categoryReducer from '../reducers/categoryReducer'
 import noteReducer from '../reducers/noteReducer'
 
