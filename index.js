@@ -1,20 +1,24 @@
 const express = require('express')
-const mongoose = require('./config/database')
-const router = require('./config/routes')
+const configureDB = require('./config/database')
 const cors = require('cors')
+const router = require('./config/routes')
+const app = express()
+const port = process.env.PORT || 3005
 
-const app= express()
+const path = require('path') 
+
+configureDB()
+
 app.use(express.json())
 app.use(cors())
-const port = 3005
 
-app.get('/',(req,res)=>
-{
-    res.send("Notes App")
-})
+app.use('/api', router)
 
-app.use('/',router)
+app.use(express.static(path.join(__dirname,"client/build"))) 
+app.get("*",(req,res) => { 
+    res.sendFile(path.join(__dirname + "/client/build/index.html")) 
+}) 
 
-app.listen(port,()=>{
-    console.log('Listening on port ', port)
+app.listen(port, () => {
+    console.log('listening on port', port)
 })

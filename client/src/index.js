@@ -1,12 +1,44 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import configureStore from './store/configureStore'
+import {setUser} from './actions/user'
+import {startSetCategory} from './actions/category'
+import {startSetNote} from './actions/note'
+import {Provider} from 'react-redux'
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import axios from './config/axios'
+
+
+const store = configureStore()
+
+// console.log(store.getState())
+
+// store.subscribe(()=>{
+//     console.log(store.getState())
+// })
+//handle page reloads
+if(localStorage.getItem('authToken')) {
+    axios.get('/api/users/account',{
+        headers:{
+            'x-auth': localStorage.getItem('authToken')
+        }
+    })
+    .then(response=>{
+        const user = response.data
+        store.dispatch(setUser(user))
+        store.dispatch(startSetNote())
+    })
+}
+
+store.dispatch(startSetCategory())
+
+
+const ele = <Provider store = {store}>
+                <App/>
+            </Provider>
+
+ReactDOM.render(ele, document.getElementById('root'))
+
+

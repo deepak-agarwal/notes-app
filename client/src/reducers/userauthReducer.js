@@ -1,8 +1,12 @@
 const userAuthReducer = (state={},action) => {
-    switch(action.type){
-        default: return {...state}
-    }
+        switch(action.type){
+            case 'SET_USER': 
+                return {...action.payload}  
+            case 'REMOVE_USER': 
+                return {}  
+            default: 
+                return {...state}
+        }
 }
-
 
 export default userAuthReducer

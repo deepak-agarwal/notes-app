@@ -1,24 +1,22 @@
-const { User } = require('../models/user')
+const User = require('../models/user')
 
-
-const authenticatorUser = function (req, res, next) {
+const authenticateUser = (req,res,next)=>{
     const token = req.header('x-auth')
     User.findByToken(token)
-        .then((user) => {
-            if (user) {
+        .then(user=>{
+            if(user){
                 req.user = user
                 req.token = token
                 next()
-            }
-            else {
-                res.status('401').send({ notice: 'token not available' })
+            } else {
+                res.status('401').json({notice: 'token not available'})
             }
         })
-        .catch((err) => {
-            res.status('401').send(err)
+        .catch(err=>{
+            res.status('401').json(err)
         })
 }
 
 module.exports = {
-    authenticatorUser
+    authenticateUser
 }
